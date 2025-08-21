@@ -7,11 +7,12 @@ const router = express.Router();
 router
   .route("/")
   .post(verifyToken("teacher"), classController.createClass)
+  // .get(verifyToken("student"),classController.getClassForStudent)
   .get(verifyToken("teacher"), classController.getAllClasses);
 
 router
   .route("/:id")
-  .get(verifyToken("teacher"), classController.getClass)
+  .get(verifyToken(), classController.getClass)
   .put(verifyToken("teacher"), classController.updateClass)
   .delete(verifyToken("teacher"), classController.deleteClass);
 

@@ -24,6 +24,19 @@ export const classController = {
       .status(200)
       .json(new ApiResponse("Classes fetched successfully", { classes }));
   }),
+  getClassForStudent : asyncHandler(async(req, res) => {
+    const studentId = req.user?._id;
+    const fetchedClass = await Class
+    .find({students :{$in:[studentId]}})
+    .select("-students -requests")
+    .populate("teacher","name")
+
+    return res
+  .status(200)
+  .json(
+    new ApiResponse(200,fetchedClass,"Classes fetched succesfully")
+  )
+  }),
   getClass: asyncHandler(async (req, res) => {
     const classId = req.params.id;
     const fetchedClass = await Class.findById(classId).populate("students","name") .populate("requests", "name");
