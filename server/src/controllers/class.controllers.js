@@ -17,14 +17,16 @@ export const classController = {
       .json(new ApiResponse("Class created successfully", { class: newClass }));
   }),
   getAllClasses: asyncHandler(async (req, res) => {
-    const classes = await Class.find();
+    const teacherId = req.user._id
+
+    const classes = await Class.find({teacher : teacherId}).populate("students", "name");
     return res
       .status(200)
       .json(new ApiResponse("Classes fetched successfully", { classes }));
   }),
   getClass: asyncHandler(async (req, res) => {
     const classId = req.params.id;
-    const fetchedClass = await Class.findById(classId);
+    const fetchedClass = await Class.findById(classId).populate("students","name") .populate("requests", "name");
     if (!fetchedClass) {
       throw new ApiError("Class not found", 404);
     }
